@@ -1,16 +1,10 @@
 from Connector import Connector
+from Query import Query
 
 connector = Connector()
-
+KEYSPACE = 'main'
 connector.connect("127.0.0.1", 9042)
-keyspace = 'test'
-test_table = {'name': 'text',
-              'age': 'int',
-              'id': 'int'}
-
-connector.create_keyspace(keyspace)
-connector.set_keyspace(keyspace)
-connector.create_table('test_tabela', test_table, 'id')
-z = 1
-
-t = 1
+connector.set_keyspace(KEYSPACE)
+query = Query(connector)
+z = query.get_object_by_arg('film','title','Samoloty')
+a = 1
