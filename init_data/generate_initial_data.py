@@ -2,50 +2,56 @@ import json
 import datetime
 import random
 
+FILMS = ["Piorun",
+         "Cruella",
+         "Nasze magiczne Encanto",
+         "Kraina lodu",
+         "Hamilton",
+         "Gwiazdka Hollywood",
+         "Lilo i Stitch",
+         "Czarownica",
+         "Vaiana: skarb oceanu",
+         "Muppety",
+         "Samoloty",
+         "Raya i ostatni smok",
+         "Zaplątani",
+         "Zwierzogród",
+         "Wyprawa do dżungli",
+         "Sneakerella",
+         "Ralph Demolka",
+         "Mary Poppins powraca",
+         "Niedźwiedzica polarna"]
+
 
 def generate_seats():
     result = []
-    i = 0
-    for col in range(12):
-        for row in range(10):
-            result.append(
-                {'id': i,
-                 'row': row,
-                 'column': col
-                 }
-            )
-            i += 1
+    j = 0
+    for i in range(len(FILMS)):
+        for col in range(5):
+            for row in range(5):
+                result.append(
+                    {'id': j,
+                     'row': row,
+                     'column': col,
+                     'free': True,
+                     'cinema_room': i
+                     }
+                )
+                j += 1
     with open('seats.json', 'w') as f:
         json.dump(result, f)
 
 
 def generate_film():
     result = []
-    start_date = datetime.datetime.today()
-    for idx, title in enumerate(["Piorun",
-                                 "Cruella",
-                                 "Nasze magiczne Encanto",
-                                 "Kraina lodu",
-                                 "Hamilton",
-                                 "Gwiazdka Hollywood",
-                                 "Lilo i Stitch",
-                                 "Czarownica",
-                                 "Vaiana: skarb oceanu",
-                                 "Muppety",
-                                 "Samoloty",
-                                 "Raya i ostatni smok",
-                                 "Zaplątani",
-                                 "Zwierzogród",
-                                 "Wyprawa do dżungli",
-                                 "Sneakerella",
-                                 "Ralph Demolka",
-                                 "Mary Poppins powraca",
-                                 "Niedźwiedzica polarna"]):
-        date = str(start_date + datetime.timedelta(days=random.randint(0, 30))).replace(' ', 'T')
+    date = str(datetime.datetime.today()).replace(' ', 'T')
+    for idx, title in enumerate(FILMS):
+
         result.append(
             {'id': idx,
              'title': f"'{title}'",
-             'date': f"'{date}'"
+             'date': f"'{date}'",
+             'cinema_room': idx
              }
         )
     with open('film.json', 'w') as f:
@@ -54,7 +60,7 @@ def generate_film():
 
 def generate_room():
     result = []
-    for i in range(1, 10):
+    for i in range(len(FILMS)):
         result.append(
             {'id': i,
              'number_of_room': i,

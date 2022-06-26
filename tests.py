@@ -1,15 +1,3 @@
-# from Connector import Connector
-# from Query import Query
-#
-# connector = Connector()
-# KEYSPACE = 'main'
-# connector.connect("127.0.0.1", 9042)
-# connector.set_keyspace(KEYSPACE)
-# query = Query(connector)
-# z = query.select_query(['*'], 'film', [
-#     ('title', '=', "'Piorun'")
-# ])
-# a = 1
 import random
 from multiprocessing import Pool
 
@@ -34,8 +22,8 @@ def get_system():
     return System(Query(connector))
 
 
-# system_1 = get_system()
-# system_2 = get_system()
+system_1 = get_system()
+system_2 = get_system()
 
 
 def perform_random_action():
@@ -49,16 +37,13 @@ def perform_random_action():
     return query
 
 
-# def test_1():
-#     for i in range(100):
-#         query = system_1.buy_ticket('Hamilton', 2, 2)
-#         print(query)
-#     print(system_1.get_all_tickets('Hamilton'))
+def test_1():
+    for i in range(100):
+        query = system_1.buy_ticket('Hamilton', 2, 2)
+        print(query)
+    print(system_1.get_all_tickets('Hamilton'))
 
 
-def dupa():
+def test_2():
     with Pool(2) as p:
-        # p.map(perform_random_action, [])
-        p.apply_async(perform_random_action, [])
-if __name__ == '__main__':
-    dupa()
+        p.map(perform_random_action, [])

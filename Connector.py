@@ -1,5 +1,5 @@
 from cassandra.cluster import Session, Cluster, NoHostAvailable
-
+from cassandra.query import dict_factory
 
 class Connector:
     def __init__(self, default_time_out: int = 60):
@@ -32,8 +32,8 @@ class Connector:
 
     def execute_command(self, command: str):
         if self._session:
-            self._session.execute(command)
-            return
+            result = self._session.execute(command)
+            return result
         raise KeyError(f"Session is not setup.")
 
     def connect(self, ip_address: str, port: int) -> None:
@@ -42,14 +42,10 @@ class Connector:
         try:
             self._session = cluster.connect()
             self._session.default_timeout = self._default_time_out
+            self._session.row_factory = dict_factory
         except (NoHostAvailable) as error:
-            raise Exception(f"COś sie wyjebało {error}")
-
-    def add_data(self, data: dict, table_name: str):
-        command = f"INSERT INTO {self._session.keyspace}.{table_name} (" + ', '.join(
-            data.keys()) + ")" + f" VALUES (" + ', '.join([str(i) for i in data.values()]) + ");"
-        self.execute_command(command)
+            raise ConnectionError(f"DB is unreachable: {error}")
 
     def disconnect(self):
         if self._session:
-            pass
+            self._session.shutdown()
