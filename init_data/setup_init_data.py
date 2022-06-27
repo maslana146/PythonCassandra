@@ -30,7 +30,8 @@ tickets_table = {
     'seat_id': 'int',
     'film_id': 'int',
     'price': 'int',
-    'data': 'timestamp'
+    'data': 'timestamp',
+    'user': 'text'
 }
 
 

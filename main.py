@@ -10,13 +10,16 @@
 #     ('title', '=', "'Piorun'")
 # ])
 # a = 1
+import multiprocessing
 import random
 from multiprocessing import Pool
 
 from Connector import Connector
 from Query import Query
-from SYstem import System
+from System import System
 import os
+
+from tests import test_1
 
 os.environ['PYTHONUNBUFFERED'] = '1'
 films = ["Zwierzogród",
@@ -38,15 +41,16 @@ def get_system():
 # system_2 = get_system()
 
 
-def perform_random_action():
+def perform_random_action(i):
     system = get_system()
-    film = random.choice(films)
-    seat_col = random.randint(0, 4)
-    seat_row = random.randint(0, 4)
+    for _ in range(50):
+        film = random.choice(films)
+        seat_col = random.randint(0, 4)
+        seat_row = random.randint(0, 4)
 
-    query = system.buy_ticket(film, seat_row, seat_col)
-    print(film, seat_row, seat_col, query)
-    return query
+        query = system.buy_ticket(film, seat_row, seat_col)
+        print(multiprocessing.current_process().pid, film, seat_row, seat_col, query)
+    # return query
 
 
 # def test_1():
@@ -57,8 +61,12 @@ def perform_random_action():
 
 
 def dupa():
+    # p = Pool(2)
+    # for i in range(2):
     with Pool(2) as p:
-        # p.map(perform_random_action, [])
-        p.apply_async(perform_random_action, [])
+        p.map(perform_random_action, [1, 2])
+        # p.apply_async(perform_random_action, [])
+
 if __name__ == '__main__':
-    dupa()
+    system = get_system()
+    print(system.get_all_tickets("Cruella"))

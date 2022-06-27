@@ -1,5 +1,3 @@
-import time
-
 from Connector import Connector
 from Query import Query
 
@@ -9,7 +7,7 @@ class System:
         self._query = query
         self._id = 0
 
-    def buy_ticket(self, title, row_seat: int, col_seat: int):
+    def buy_ticket(self, title: str, row_seat: int, col_seat: int, user: str):
         film = self._query.select_query(['*'], 'film', [("title", '=', f"'{title}'")]).one()
         if not film:
             return "Film not found."
@@ -19,20 +17,24 @@ class System:
                                                          ('cinema_room', '=', f'{film["cinema_room"]}')]).one()
         if not seat:
             return "Seat is already reserved"
+        seat['free'] = False
+        # time.sleep(1)
+        self._query.add_data(seat, 'seats')
         tickets = self._query.select_query(['*'], 'tickets', []).all()
-        max_id = max(tickets, key=lambda x: x['id'])['id']
+        if tickets:
+            max_id = max(tickets, key=lambda x: x['id'])['id']
+        else:
+            max_id = 0
         ticket = {
-            'id': max_id+1,
+            'id': max_id + 1,
             'seat_id': seat['id'],
             'film_id': film['id'],
             'price': 666,
             'data': f"'{film['date']}'",
+            'user': f"'{user}'"
         }
+
         self._query.add_data(ticket, 'tickets')
-        seat['free'] = False
-        time.sleep(1)
-        self._query.add_data(seat, 'seats')
-        self._id += 1
         return ticket
 
     def get_all_tickets(self, title: str):
