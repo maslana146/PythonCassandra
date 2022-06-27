@@ -44,6 +44,18 @@ class System:
         results = self._query.select_query(['*'], 'tickets', [('film_id', '=', film['id'])]).all()
         return results
 
+    def get_user_tickets(self, user: str):
+        results = self._query.select_query(['*'], 'tickets', [('user', '=', {user})]).all()
+        return results
+
+    def get_free_seats_on_film(self, title: str):
+        film = self._query.select_query(['*'], 'film', [("title", '=', f"'{title}'")]).one()
+        if not film:
+            return "Film not found."
+        seats = self._query.select_query(['*'], 'seats', [('free', '=', True),
+                                                          ('cinema_room', '=', f'{film["cinema_room"]}')]).all()
+        return seats
+
 
 if __name__ == '__main__':
     connector = Connector()
