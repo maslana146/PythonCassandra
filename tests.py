@@ -60,10 +60,14 @@ def test_1():
 
 
 def test_2():
+    t = time.time()
     with Pool(2) as p:
         p.map(perform_random_actions, [1, 2])
+    print(time.time() - t)
 
 
 def test_3():
+    t = time.time()
     with Pool(2) as p:
         p.map(reserve_all_seats, ["Lilo i Stitch", "Lilo i Stitch"])
+    print(time.time() - t)

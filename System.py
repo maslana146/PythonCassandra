@@ -45,7 +45,7 @@ class System:
         return results
 
     def get_user_tickets(self, user: str):
-        results = self._query.select_query(['*'], 'tickets', [('user', '=', {user})]).all()
+        results = self._query.select_query(['*'], 'tickets', [('user', '=', f"'{user}'")]).all()
         return results
 
     def get_free_seats_on_film(self, title: str):
